@@ -99,14 +99,8 @@ func logrusMiddlewareHandler(c echo.Context, next echo.HandlerFunc) error {
 	stop := time.Now()
 
 	p := req.URL.Path
-	if p == "" {
-		p = "/"
-	}
 
 	bytesIn := req.Header.Get(echo.HeaderContentLength)
-	if bytesIn == "" {
-		bytesIn = "0"
-	}
 
 	logrus.WithFields(map[string]interface{}{
 		"time_rfc3339":  time.Now().Format(time.RFC3339),
