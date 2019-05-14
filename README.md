@@ -2,7 +2,7 @@
 
 Middleware echo-logrus is a [logrus](https://github.com/sirupsen/logrus) logger support for [echo](https://github.com/labstack/echo).
 
-####Install
+#### Install
 
 ```sh
 go get -u github.com/plutov/echo-logrus
