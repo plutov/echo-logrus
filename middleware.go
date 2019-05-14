@@ -1,4 +1,4 @@
-package echologrus
+package echoEchoLogger
 
 import (
 	"io"
@@ -10,10 +10,12 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// Logger : implement logrus Logger
+// Logger : implement EchoLogger Logger
 type Logger struct {
 	*logrus.Logger
 }
+
+var EchoLogger *logrus.Logger
 
 // Level returns logger level
 func (l Logger) Level() log.Lvl {
@@ -34,13 +36,13 @@ func (l Logger) Level() log.Lvl {
 }
 
 // SetHeader is a stub to satisfy interface
-// It's controlled by logrus
+// It's controlled by EchoLogger
 func (l Logger) SetHeader(_ string) {}
 
-// SetPrefix It's controlled by logrus
+// SetPrefix It's controlled by EchoLogger
 func (l Logger) SetPrefix(s string) {}
 
-// Prefix It's controlled by logrus
+// Prefix It's controlled by EchoLogger
 func (l Logger) Prefix() string {
 	return ""
 }
@@ -49,13 +51,13 @@ func (l Logger) Prefix() string {
 func (l Logger) SetLevel(lvl log.Lvl) {
 	switch lvl {
 	case log.DEBUG:
-		logrus.SetLevel(logrus.DebugLevel)
+		EchoLogger.SetLevel(logrus.DebugLevel)
 	case log.WARN:
-		logrus.SetLevel(logrus.WarnLevel)
+		EchoLogger.SetLevel(logrus.WarnLevel)
 	case log.ERROR:
-		logrus.SetLevel(logrus.ErrorLevel)
+		EchoLogger.SetLevel(logrus.ErrorLevel)
 	case log.INFO:
-		logrus.SetLevel(logrus.InfoLevel)
+		EchoLogger.SetLevel(logrus.InfoLevel)
 	default:
 		l.Panic("Invalid level")
 	}
@@ -68,77 +70,77 @@ func (l Logger) Output() io.Writer {
 
 // SetOutput change output, default os.Stdout
 func (l Logger) SetOutput(w io.Writer) {
-	logrus.SetOutput(w)
+	EchoLogger.SetOutput(w)
 }
 
 // Printj print json log
 func (l Logger) Printj(j log.JSON) {
-	logrus.WithFields(logrus.Fields(j)).Print()
+	EchoLogger.WithFields(logrus.Fields(j)).Print()
 }
 
 // Debugj debug json log
 func (l Logger) Debugj(j log.JSON) {
-	logrus.WithFields(logrus.Fields(j)).Debug()
+	EchoLogger.WithFields(logrus.Fields(j)).Debug()
 }
 
 // Infoj info json log
 func (l Logger) Infoj(j log.JSON) {
-	logrus.WithFields(logrus.Fields(j)).Info()
+	EchoLogger.WithFields(logrus.Fields(j)).Info()
 }
 
 // Warnj warning json log
 func (l Logger) Warnj(j log.JSON) {
-	logrus.WithFields(logrus.Fields(j)).Warn()
+	EchoLogger.WithFields(logrus.Fields(j)).Warn()
 }
 
 // Errorj error json log
 func (l Logger) Errorj(j log.JSON) {
-	logrus.WithFields(logrus.Fields(j)).Error()
+	EchoLogger.WithFields(logrus.Fields(j)).Error()
 }
 
 // Fatalj fatal json log
 func (l Logger) Fatalj(j log.JSON) {
-	logrus.WithFields(logrus.Fields(j)).Fatal()
+	EchoLogger.WithFields(logrus.Fields(j)).Fatal()
 }
 
 // Panicj panic json log
 func (l Logger) Panicj(j log.JSON) {
-	logrus.WithFields(logrus.Fields(j)).Panic()
+	EchoLogger.WithFields(logrus.Fields(j)).Panic()
 }
 
 // Print string log
 func (l Logger) Print(i ...interface{}) {
-	logrus.Print(i[0].(string))
+	EchoLogger.Print(i[0].(string))
 }
 
 // Debug string log
 func (l Logger) Debug(i ...interface{}) {
-	logrus.Debug(i[0].(string))
+	EchoLogger.Debug(i[0].(string))
 }
 
 // Info string log
 func (l Logger) Info(i ...interface{}) {
-	logrus.Info(i[0].(string))
+	EchoLogger.Info(i[0].(string))
 }
 
 // Warn string log
 func (l Logger) Warn(i ...interface{}) {
-	logrus.Warn(i[0].(string))
+	EchoLogger.Warn(i[0].(string))
 }
 
 // Error string log
 func (l Logger) Error(i ...interface{}) {
-	logrus.Error(i[0].(string))
+	EchoLogger.Error(i[0].(string))
 }
 
 // Fatal string log
 func (l Logger) Fatal(i ...interface{}) {
-	logrus.Fatal(i[0].(string))
+	EchoLogger.Fatal(i[0].(string))
 }
 
 // Panic string log
 func (l Logger) Panic(i ...interface{}) {
-	logrus.Panic(i[0].(string))
+	EchoLogger.Panic(i[0].(string))
 }
 
 func logrusMiddlewareHandler(c echo.Context, next echo.HandlerFunc) error {
@@ -154,7 +156,7 @@ func logrusMiddlewareHandler(c echo.Context, next echo.HandlerFunc) error {
 
 	bytesIn := req.Header.Get(echo.HeaderContentLength)
 
-	logrus.WithFields(map[string]interface{}{
+	EchoLogger.WithFields(map[string]interface{}{
 		"time_rfc3339":  time.Now().Format(time.RFC3339),
 		"remote_ip":     c.RealIP(),
 		"host":          req.Host,
