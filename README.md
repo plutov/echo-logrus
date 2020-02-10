@@ -2,6 +2,9 @@
 
 Middleware echo-logrus is a [logrus](https://github.com/sirupsen/logrus) logger support for [echo](https://github.com/labstack/echo).
 
+`v3.0` tag supports v3.
+`v4.0` tag supports v4.
+
 #### Install
 
 ```sh
