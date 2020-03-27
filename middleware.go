@@ -2,7 +2,6 @@ package echologrus
 
 import (
 	"io"
-	"strconv"
 	"time"
 
 	"github.com/labstack/echo/v4"
@@ -158,24 +157,20 @@ func logrusMiddlewareHandler(c echo.Context, next echo.HandlerFunc) error {
 	}
 	stop := time.Now()
 
-	p := req.URL.Path
-
-	bytesIn := req.Header.Get(echo.HeaderContentLength)
-
 	Logger.WithFields(map[string]interface{}{
 		"time_rfc3339":  time.Now().Format(time.RFC3339),
 		"remote_ip":     c.RealIP(),
 		"host":          req.Host,
 		"uri":           req.RequestURI,
 		"method":        req.Method,
-		"path":          p,
+		"path":          req.URL.Path,
 		"referer":       req.Referer(),
 		"user_agent":    req.UserAgent(),
 		"status":        res.Status,
-		"latency":       strconv.FormatInt(stop.Sub(start).Nanoseconds()/1000, 10),
+		"latency":       stop.Sub(start).Microseconds(),
 		"latency_human": stop.Sub(start).String(),
-		"bytes_in":      bytesIn,
-		"bytes_out":     strconv.FormatInt(res.Size, 10),
+		"bytes_in":      req.ContentLength,
+		"bytes_out":     res.Size,
 	}).Info("Handled request")
 
 	return nil
